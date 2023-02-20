@@ -6,14 +6,14 @@ import javafx.scene.input.MouseEvent;
 
 import static org.openjfx.sample.VertexBehaviourManager.ActionType.*;
 
-public class Vertex extends Button {
+class Vertex extends Button {
   private static int globalVertexCounter = 0;
 
   final private String id = String.valueOf(globalVertexCounter++);
   final private VertexBehaviourManager vertexBehaviourManager = new VertexBehaviourManager(this);
   final private ObservableList<String> vertexStyleClass = getStyleClass();
 
-  public Vertex(final double x, final double y) {
+  Vertex(final double x, final double y) {
     initVertex(x, y);
   }
 
@@ -30,24 +30,24 @@ public class Vertex extends Button {
     setOnMouseReleased(this::onMouseReleased);
   }
 
-  public VertexBehaviourManager getVertexBehaviourManager() {
+  protected VertexBehaviourManager getVertexBehaviourManager() {
     return vertexBehaviourManager;
   }
-  public void setVertexPosition(final MouseEvent mouseEvent) {
+  protected void setVertexPosition(final MouseEvent mouseEvent) {
     setVertexPosition(mouseEvent.getX(), mouseEvent.getY());
   }
-  public void setVertexPosition(final double x, final double y) {
+  protected void setVertexPosition(final double x, final double y) {
     setLayoutX(x);
     setLayoutY(y);
   }
-  public void updateVertexPosition(final MouseEvent mouseEvent) {
+  protected void updateVertexPosition(final MouseEvent mouseEvent) {
     updateVertexPosition(mouseEvent.getX(), mouseEvent.getY());
   }
-  public void updateVertexPosition(final double x, final double y) {
+  protected void updateVertexPosition(final double x, final double y) {
     setLayoutX(getLayoutX() + x + getTranslateX());
     setLayoutY(getLayoutY() + y + getTranslateY());
   }
-  public void centerVertex() {
+  protected void centerVertex() {
     final int byTwo = -2;
     final var width  = widthProperty().divide(byTwo);
     final var height = heightProperty().divide(byTwo);

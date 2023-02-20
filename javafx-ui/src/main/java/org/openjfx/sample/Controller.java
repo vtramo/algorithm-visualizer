@@ -11,36 +11,36 @@ public class Controller {
   private AnchorPane graph;
   private final Vertex[] lastVertexCreated = new Vertex[1];
 
-  public Vertex getLastVertexCreated() {
+  protected Vertex getLastVertexCreated() {
     return lastVertexCreated[0];
   }
-  public void setLastVertexCreated(final Vertex vertex) { lastVertexCreated[0] = vertex; }
-  public void onGraphPressed(final MouseEvent mouseEvent) {
+  protected void setLastVertexCreated(final Vertex vertex) { lastVertexCreated[0] = vertex; }
+  protected void onGraphPressed(final MouseEvent mouseEvent) {
     if (!mouseEvent.isPrimaryButtonDown()) return;
     lastVertexCreated[0] = spawnVertexOnGraph(mouseEvent.getX(), mouseEvent.getY());
   }
-  public void onGraphDragDetected(final MouseEvent mouseEvent) {
+  protected void onGraphDragDetected(final MouseEvent mouseEvent) {
     if (!mouseEvent.isPrimaryButtonDown()) return;
     final var penultimateVertex = lastVertexCreated[0];
     lastVertexCreated[0] = spawnVertexOnGraph(mouseEvent.getX(), mouseEvent.getY());
     spawnArrowOnGraph(penultimateVertex, lastVertexCreated[0]);
   }
-  public void onGraphDragged(final MouseEvent mouseEvent) {
+  protected void onGraphDragged(final MouseEvent mouseEvent) {
     if (!mouseEvent.isPrimaryButtonDown()) return;
     if (lastVertexCreated[0] != null) {
       lastVertexCreated[0].setVertexPosition(mouseEvent.getX(), mouseEvent.getY());
     }
   }
-  public void onMouseReleased(MouseEvent __) {
+  protected void onMouseReleased(MouseEvent __) {
     lastVertexCreated[0] = null;
   }
   protected Vertex spawnVertexOnGraph(final double x, final double y) {
     final Vertex vertex = new Vertex(x, y);
 
     final var vertexBehaviourManager = vertex.getVertexBehaviourManager();
-    final var vertexDragDetectedBehavior = new VertexDragDetectedBehavior(this, vertexBehaviourManager);
+    final var vertexDragDetectedArrowCreatorBehavior = new VertexDragDetectedArrowCreatorBehavior(this, vertexBehaviourManager);
     final var vertexDeletionBehavior = new VertexDeletionBehavior(this, vertexBehaviourManager);
-    vertexBehaviourManager.addOnVertexDragDetectedAction(vertexDragDetectedBehavior, IGNORE_KEY);
+    vertexBehaviourManager.addOnVertexDragDetectedAction(vertexDragDetectedArrowCreatorBehavior, IGNORE_KEY);
     vertexBehaviourManager.addOnVertexPressedAction(vertexDeletionBehavior, IGNORE_KEY);
 
     addVertex(vertex);

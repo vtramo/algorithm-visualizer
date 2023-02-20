@@ -2,7 +2,7 @@ package org.openjfx.sample;
 
 import javafx.scene.input.MouseEvent;
 
-public class DefaultVertexBehaviors {
+class DefaultVertexBehaviors {
 
   private DefaultVertexBehaviors() {}
   protected static final Object ON_PRIMARY_BUTTON_CLICKED_UPDATE_VERTEX_POSITION_KEY = new Object();
@@ -12,7 +12,7 @@ public class DefaultVertexBehaviors {
     if (!mouseEvent.isPrimaryButtonDown()) return;
     vertex.updateVertexPosition(mouseEvent);
   }
-  protected static void onVertexDragDetectedSetVertexToFront(final Vertex vertex, final MouseEvent mouseEvent) {
+  protected static void onVertexDragDetectedSetVertexToFront(final Vertex vertex, final MouseEvent __) {
     vertex.toFront();
   }
 }

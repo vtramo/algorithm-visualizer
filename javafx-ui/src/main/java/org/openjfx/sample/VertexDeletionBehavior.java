@@ -2,7 +2,7 @@ package org.openjfx.sample;
 
 import javafx.scene.input.MouseEvent;
 
-public class VertexDeletionBehavior extends VertexBehavior {
+class VertexDeletionBehavior extends VertexBehavior {
 
   protected VertexDeletionBehavior(Controller controller, VertexBehaviourManager vertexBehaviourManager) {
     super(controller, vertexBehaviourManager);
