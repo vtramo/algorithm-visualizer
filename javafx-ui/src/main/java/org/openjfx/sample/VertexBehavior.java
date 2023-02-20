@@ -1,6 +1,10 @@
 package org.openjfx.sample;
 
-public abstract class VertexBehavior {
+import javafx.scene.input.MouseEvent;
+
+import java.util.function.BiConsumer;
+
+public abstract class VertexBehavior implements BiConsumer<Vertex, MouseEvent> {
   protected static final int IGNORE_KEY = -1;
   protected final Controller controller;
   protected final VertexBehaviourManager vertexBehaviourManager;

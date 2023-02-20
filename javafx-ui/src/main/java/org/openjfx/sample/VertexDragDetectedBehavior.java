@@ -3,9 +3,8 @@ package org.openjfx.sample;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
-public class VertexDragDetectedBehavior extends VertexBehavior implements BiConsumer<Vertex, MouseEvent> {
+public class VertexDragDetectedBehavior extends VertexBehavior {
 
   protected static final int ACTION_ONE_KEY = 3, ACTION_TWO_KEY = 4;
   private Vertex vertexOne, vertexTwo;

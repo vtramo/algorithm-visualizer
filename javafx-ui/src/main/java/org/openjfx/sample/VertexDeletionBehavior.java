@@ -2,9 +2,7 @@ package org.openjfx.sample;
 
 import javafx.scene.input.MouseEvent;
 
-import java.util.function.BiConsumer;
-
-public class VertexDeletionBehavior extends VertexBehavior implements BiConsumer<Vertex, MouseEvent> {
+public class VertexDeletionBehavior extends VertexBehavior {
 
   protected VertexDeletionBehavior(Controller controller, VertexBehaviourManager vertexBehaviourManager) {
     super(controller, vertexBehaviourManager);
