@@ -1,17 +1,21 @@
-package org.openjfx.sample;
+package org.openjfx.ui;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 
-import static org.openjfx.sample.VertexBehaviourManager.ActionType.*;
+import java.util.function.Consumer;
+
+import static org.openjfx.ui.VertexBehaviorManager.ActionType.*;
+import static org.openjfx.ui.style.VertexStyles.VERTEX_DEFAULT_STYLE;
 
 class Vertex extends Button {
   private static int globalVertexCounter = 0;
-
   final private String id = String.valueOf(globalVertexCounter++);
-  final private VertexBehaviourManager vertexBehaviourManager = new VertexBehaviourManager(this);
+  final private VertexBehaviorManager vertexBehaviorManager = new VertexBehaviorManager(this);
   final private ObservableList<String> vertexStyleClass = getStyleClass();
+  final private ObservableList<Arrow> edges = FXCollections.observableArrayList();
 
   Vertex(final double x, final double y) {
     initVertex(x, y);
@@ -19,7 +23,7 @@ class Vertex extends Button {
 
   private void initVertex(final double x, final double y) {
     setText(id);
-    vertexStyleClass.add("visNode");
+    vertexStyleClass.add(VERTEX_DEFAULT_STYLE);
 
     setVertexPosition(x, y);
     centerVertex();
@@ -29,9 +33,14 @@ class Vertex extends Button {
     setOnMousePressed(this::onVertexPressed);
     setOnMouseReleased(this::onMouseReleased);
   }
-
-  protected VertexBehaviourManager getVertexBehaviourManager() {
-    return vertexBehaviourManager;
+  protected VertexBehaviorManager getVertexBehaviourManager() {
+    return vertexBehaviorManager;
+  }
+  protected boolean addEdge(final Arrow edge) {
+    return edges.add(edge);
+  }
+  protected void forAllEdges(final Consumer<Arrow> arrowConsumer) {
+    edges.forEach(arrowConsumer);
   }
   protected void setVertexPosition(final MouseEvent mouseEvent) {
     setVertexPosition(mouseEvent.getX(), mouseEvent.getY());
@@ -56,15 +65,15 @@ class Vertex extends Button {
   }
 
   private void onVertexDragged(final MouseEvent mouseEvent) {
-    vertexBehaviourManager.performAllActions(VERTEX_DRAGGED_ACTIONS, mouseEvent);
+    vertexBehaviorManager.performAllActions(VERTEX_DRAGGED_ACTIONS, mouseEvent);
   }
   private void onVertexDragDetected(final MouseEvent mouseEvent) {
-    vertexBehaviourManager.performAllActions(VERTEX_DRAG_DETECTED_ACTIONS, mouseEvent);
+    vertexBehaviorManager.performAllActions(VERTEX_DRAG_DETECTED_ACTIONS, mouseEvent);
   }
   private void onVertexPressed(final MouseEvent mouseEvent) {
-    vertexBehaviourManager.performAllActions(VERTEX_PRESSED_ACTIONS, mouseEvent);
+    vertexBehaviorManager.performAllActions(VERTEX_PRESSED_ACTIONS, mouseEvent);
   }
   private void onMouseReleased(final MouseEvent mouseEvent) {
-    vertexBehaviourManager.performAllActions(MOUSE_RELEASED_ACTIONS, mouseEvent);
+    vertexBehaviorManager.performAllActions(MOUSE_RELEASED_ACTIONS, mouseEvent);
   }
 }
