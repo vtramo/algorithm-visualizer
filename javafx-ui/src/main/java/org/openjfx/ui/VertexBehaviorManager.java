@@ -1,4 +1,4 @@
-package org.openjfx.sample;
+package org.openjfx.ui;
 
 import javafx.scene.input.MouseEvent;
 
@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 
-import static org.openjfx.sample.DefaultVertexBehaviors.ON_PRIMARY_BUTTON_CLICKED_UPDATE_VERTEX_POSITION_KEY;
-import static org.openjfx.sample.DefaultVertexBehaviors.ON_VERTEX_DRAG_DETECTED_SET_VERTEX_TO_FRONT_KEY;
+import static org.openjfx.ui.DefaultVertexBehaviors.ON_PRIMARY_BUTTON_CLICKED_UPDATE_VERTEX_POSITION_KEY;
+import static org.openjfx.ui.DefaultVertexBehaviors.ON_VERTEX_DRAG_DETECTED_SET_VERTEX_TO_FRONT_KEY;
 
-class VertexBehaviourManager {
+class VertexBehaviorManager {
   protected enum ActionType {
     VERTEX_DRAGGED_ACTIONS,
     VERTEX_DRAG_DETECTED_ACTIONS,
@@ -18,7 +18,7 @@ class VertexBehaviourManager {
   }
 
   final private Vertex vertex;
-  VertexBehaviourManager(Vertex vertex) {
+  VertexBehaviorManager(Vertex vertex) {
     this.vertex = vertex;
   }
 

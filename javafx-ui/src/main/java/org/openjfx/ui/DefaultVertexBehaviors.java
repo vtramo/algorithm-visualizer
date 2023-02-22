@@ -1,4 +1,4 @@
-package org.openjfx.sample;
+package org.openjfx.ui;
 
 import javafx.scene.input.MouseEvent;
 

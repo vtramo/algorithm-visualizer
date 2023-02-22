@@ -1,4 +1,4 @@
-package org.openjfx.sample;
+package org.openjfx.ui;
 
 import javafx.scene.input.MouseEvent;
 
@@ -7,10 +7,10 @@ import java.util.function.BiConsumer;
 abstract class VertexBehavior implements BiConsumer<Vertex, MouseEvent> {
   protected static final int IGNORE_KEY = -1;
   protected final Controller controller;
-  protected final VertexBehaviourManager vertexBehaviourManager;
+  protected final VertexBehaviorManager vertexBehaviorManager;
 
-  protected VertexBehavior(Controller controller, VertexBehaviourManager vertexBehaviourManager) {
+  protected VertexBehavior(Controller controller, VertexBehaviorManager vertexBehaviorManager) {
     this.controller = controller;
-    this.vertexBehaviourManager = vertexBehaviourManager;
+    this.vertexBehaviorManager = vertexBehaviorManager;
   }
 }
