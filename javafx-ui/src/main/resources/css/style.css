@@ -1,0 +1,31 @@
+.vertex {
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+
+    -fx-padding: 0 4 0 4;
+
+    -fx-background-color: white;
+    -fx-background-radius: 22;
+
+    -fx-border-color: black;
+    -fx-border-radius: 22;
+}
+
+.arrow {
+
+}
+
+.arrowHead {
+
+}
+
+.redTransparentVertex {
+    -fx-background-color: red;
+    -fx-stroke: red;
+    -fx-opacity: .4;
+}
+
+.greenTransparentVertex {
+    -fx-background-color: green;
+    -fx-stroke: green;
+}

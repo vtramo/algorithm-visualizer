@@ -1,7 +1,8 @@
 module org.openjfx {
   requires javafx.controls;
   requires javafx.fxml;
+  requires lombok;
   exports org.openjfx;
-  exports org.openjfx.sample;
-  opens org.openjfx.sample to javafx.fxml;
+  exports org.openjfx.ui;
+  opens org.openjfx.ui to javafx.fxml;
 }

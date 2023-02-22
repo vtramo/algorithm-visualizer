@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.openjfx.ui.Controller"
+            prefHeight="400.0" prefWidth="600.0"
+            stylesheets="@../css/style.css">
+
+    <center>
+        <AnchorPane fx:id="graph"
+                    style="-fx-background-color:lightblue;"
+                    onMousePressed="#onGraphPressed"/>
+    </center>
+
+    <left>
+        <VBox prefHeight="400.0" prefWidth="600.0">
+
+            <Button text="Add" onMouseClicked="#onAddClicked"/>
+            <Button text="Search" onMouseClicked="#onSearchButtonClicked"/>
+            <Spinner fx:id="searchValueSpinner"/>
+            <Button text="Remove" onMouseClicked="#onRemoveButtonClicked"/>
+            <Spinner fx:id="removeValueSpinner"/>
+
+            <Slider fx:id="algorithmDisplaySpeedSlider"
+                    majorTickUnit="10"
+                    minorTickCount="10"
+                    showTickLabels="true"
+                    onMouseDragged="#onAlgorithmDisplaySpeedSliderValueChanged"/>
+        </VBox>
+    </left>
+</BorderPane>
