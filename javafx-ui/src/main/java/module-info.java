@@ -5,4 +5,5 @@ module org.openjfx {
   exports org.openjfx;
   exports org.openjfx.ui;
   opens org.openjfx.ui to javafx.fxml;
+  opens org.openjfx to javafx.fxml;
 }

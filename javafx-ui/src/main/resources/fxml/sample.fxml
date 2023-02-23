@@ -5,15 +5,13 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.ui.Controller">
+<BorderPane fx:id="borderPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.Controller">
     <left>
         <VBox>
    
             <Button onMouseClicked="#onAddClicked" text="Add" textFill="#795252" />
-         <Spinner fx:id="addValueSpinner" layoutX="10.0" layoutY="58.0" />
+            <Spinner fx:id="addValueSpinner" layoutX="10.0" layoutY="58.0" />
             <Button onMouseClicked="#onSearchButtonClicked" text="Search" />
             <Spinner fx:id="searchValueSpinner" />
             <Button onMouseClicked="#onRemoveButtonClicked" text="Remove" />
@@ -25,7 +23,4 @@
             </padding></Slider>
         </VBox>
     </left>
-   <right>
-      <Pane fx:id="graph" onMousePressed="#onGraphPressed" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color:lightblue;" BorderPane.alignment="CENTER" />
-   </right>
 </BorderPane>

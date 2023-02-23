@@ -1,4 +1,4 @@
-package org.openjfx.ui;
+package org.openjfx.model;
 
 import javafx.util.Pair;
 import lombok.AccessLevel;
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.util.LinkedList;
 
-class NextVertexPositionCalculator {
+public class PositionCalculator {
   private final double xInitialPosition, yInitialPosition;
   private double xPositionIncrementFactor, yPositionIncrementFactor;
   private final double maxX, maxY, minX, minY;
@@ -17,7 +17,7 @@ class NextVertexPositionCalculator {
   private double x, y;
 
   @Builder
-  protected NextVertexPositionCalculator(
+  public PositionCalculator(
     double xInitialPosition,
     double yInitialPosition,
     double xPositionIncrementFactor,
@@ -38,7 +38,7 @@ class NextVertexPositionCalculator {
     historyPositions.add(new Pair<>(xInitialPosition, yInitialPosition));
   }
 
-  protected double[] goAhead() {
+  public Position goAhead() {
     final var nextX = x + xPositionIncrementFactor;
     final var nextY = y + yPositionIncrementFactor;
     if (nextX <= maxX && nextX >= minX) {
@@ -53,7 +53,7 @@ class NextVertexPositionCalculator {
     historyPositions.add(new Pair<>(x, y));
     return getActualPosition();
   }
-  protected double[] goBack() {
+  public Position goBack() {
     final var totalPositions = historyPositions.size();
     if (totalPositions - 1 <= 0) throw new IllegalStateException();
     final var lastPosition = historyPositions.get(totalPositions - 2);
@@ -63,7 +63,12 @@ class NextVertexPositionCalculator {
     limitReached = false;
     return getActualPosition();
   }
-  protected double[] getActualPosition() {
-    return new double[] { x, y };
+  public Position getActualPosition() {
+    return new Position(x, y);
+  }
+
+  public void reset() {
+    x = xInitialPosition;
+    y = yInitialPosition;
   }
 }
