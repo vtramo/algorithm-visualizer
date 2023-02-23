@@ -20,7 +20,7 @@ class VertexDragDetectedArrowCreatorBehavior extends VertexBehavior {
   }
   private void spawnVertexTwoWithArrow(final Vertex vertexOne) {
     this.vertexOne = vertexOne;
-    this.vertexTwo = controller.spawnVertex(vertexOne.getLayoutX(), vertexOne.getLayoutY());
+    this.vertexTwo = controller.spawnVertex(1, vertexOne.getLayoutX(), vertexOne.getLayoutY());
     edge = controller.linkVertexes(vertexOne, vertexTwo);
     setVertexTwoArrowDraggedStyle();
     vertexOneBehaviourManager.addOnVertexDraggedAction(this::onVertexOneDraggedUpdateVertexTwoPosition, ACTION_ONE_KEY);

@@ -6,9 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiConsumer;
 
-import static org.openjfx.ui.DefaultVertexBehaviors.ON_PRIMARY_BUTTON_CLICKED_UPDATE_VERTEX_POSITION_KEY;
-import static org.openjfx.ui.DefaultVertexBehaviors.ON_VERTEX_DRAG_DETECTED_SET_VERTEX_TO_FRONT_KEY;
-
 class VertexBehaviorManager {
   protected enum ActionType {
     VERTEX_DRAGGED_ACTIONS,
@@ -22,24 +19,11 @@ class VertexBehaviorManager {
     this.vertex = vertex;
   }
 
-  final private ConcurrentMap<Object, BiConsumer<Vertex, MouseEvent>> onVertexDraggedActions = new ConcurrentHashMap<>() {
-    {
-      put(
-        ON_PRIMARY_BUTTON_CLICKED_UPDATE_VERTEX_POSITION_KEY,
-        DefaultVertexBehaviors::onPrimaryButtonClickedUpdateVertexPosition
-      );
-    }
-  };
-  final private ConcurrentMap<Object, BiConsumer<Vertex, MouseEvent>> onVertexDragDetectedActions = new ConcurrentHashMap<>() {
-    {
-      put(
-        ON_VERTEX_DRAG_DETECTED_SET_VERTEX_TO_FRONT_KEY,
-        DefaultVertexBehaviors::onVertexDragDetectedSetVertexToFront
-      );
-    }
-  };
-  final private ConcurrentMap<Object, BiConsumer<Vertex, MouseEvent>> onVertexPressedActions = new ConcurrentHashMap<>();
-  final private ConcurrentMap<Object, BiConsumer<Vertex, MouseEvent>> onMouseReleasedActions = new ConcurrentHashMap<>();
+  final private ConcurrentMap<Object, BiConsumer<Vertex, MouseEvent>>
+    onVertexDraggedActions = new ConcurrentHashMap<>(),
+    onVertexDragDetectedActions = new ConcurrentHashMap<>(),
+    onVertexPressedActions = new ConcurrentHashMap<>(),
+    onMouseReleasedActions = new ConcurrentHashMap<>();
 
   protected void performAllActions(ActionType actionType, MouseEvent mouseEvent) {
     switch (actionType) {

@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.function.Consumer;
 
@@ -11,18 +13,19 @@ import static org.openjfx.ui.VertexBehaviorManager.ActionType.*;
 import static org.openjfx.ui.style.VertexStyles.VERTEX_DEFAULT_STYLE;
 
 class Vertex extends Button {
-  private static int globalVertexCounter = 0;
-  final private String id = String.valueOf(globalVertexCounter++);
   final private VertexBehaviorManager vertexBehaviorManager = new VertexBehaviorManager(this);
   final private ObservableList<String> vertexStyleClass = getStyleClass();
   final private ObservableList<Arrow> edges = FXCollections.observableArrayList();
+  @Setter @Getter private Vertex prev, next;
+  @Setter @Getter private Integer value;
 
-  Vertex(final double x, final double y) {
-    initVertex(x, y);
+  Vertex(final int value, final double x, final double y) {
+    initVertex(value, x, y);
   }
 
-  private void initVertex(final double x, final double y) {
-    setText(id);
+  private void initVertex(final Integer value, final double x, final double y) {
+    this.value = value;
+    setText(value.toString());
     vertexStyleClass.add(VERTEX_DEFAULT_STYLE);
 
     setVertexPosition(x, y);

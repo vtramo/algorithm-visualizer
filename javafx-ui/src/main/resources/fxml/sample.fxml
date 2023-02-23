@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.openjfx.ui.Controller"
-            prefHeight="400.0" prefWidth="600.0"
-            stylesheets="@../css/style.css">
 
-    <center>
-        <AnchorPane fx:id="graph"
-                    style="-fx-background-color:lightblue;"
-                    onMousePressed="#onGraphPressed"/>
-    </center>
-
+<BorderPane stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.ui.Controller">
     <left>
-        <VBox prefHeight="400.0" prefWidth="600.0">
+        <VBox>
+   
+            <Button onMouseClicked="#onAddClicked" text="Add" textFill="#795252" />
+         <Spinner fx:id="addValueSpinner" layoutX="10.0" layoutY="58.0" />
+            <Button onMouseClicked="#onSearchButtonClicked" text="Search" />
+            <Spinner fx:id="searchValueSpinner" />
+            <Button onMouseClicked="#onRemoveButtonClicked" text="Remove" />
+            <Spinner fx:id="removeValueSpinner" />
 
-            <Button text="Add" onMouseClicked="#onAddClicked"/>
-            <Button text="Search" onMouseClicked="#onSearchButtonClicked"/>
-            <Spinner fx:id="searchValueSpinner"/>
-            <Button text="Remove" onMouseClicked="#onRemoveButtonClicked"/>
-            <Spinner fx:id="removeValueSpinner"/>
-
-            <Slider fx:id="algorithmDisplaySpeedSlider"
-                    majorTickUnit="10"
-                    minorTickCount="10"
-                    showTickLabels="true"
-                    onMouseDragged="#onAlgorithmDisplaySpeedSliderValueChanged"/>
+            <Slider fx:id="algorithmDisplaySpeedSlider" majorTickUnit="10" minorTickCount="10" onMouseDragged="#onAlgorithmDisplaySpeedSliderValueChanged" showTickLabels="true">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding></Slider>
         </VBox>
     </left>
+   <right>
+      <Pane fx:id="graph" onMousePressed="#onGraphPressed" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color:lightblue;" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

@@ -7,7 +7,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -22,10 +22,11 @@ public class Controller {
   private static final long ALGORITHM_DISPLAY_DELAY_FOUND = 1500L;
   private long actualAlgorithmDisplaySpeed = 50;
 
-  @FXML private AnchorPane graph;
+  @FXML private Pane graph;
   @FXML private Slider algorithmDisplaySpeedSlider;
   @FXML public Spinner<Integer> searchValueSpinner;
   @FXML public Spinner<Integer> removeValueSpinner;
+  @FXML public Spinner<Integer> addValueSpinner;
 
   private final LinkedList<Vertex> vertices = new LinkedList<>() {
     @Override
@@ -39,6 +40,7 @@ public class Controller {
   protected void initialize() {
     buildIntegerSpinner(searchValueSpinner);
     buildIntegerSpinner(removeValueSpinner);
+    buildIntegerSpinner(addValueSpinner);
   }
   private void buildIntegerSpinner(final Spinner<Integer> spinner) {
     final var spinnerValueFactory = new SpinnerValueFactory
@@ -49,20 +51,24 @@ public class Controller {
   }
 
   @FXML
-  protected void onGraphPressed(final MouseEvent mouseEvent) {
-    if (!mouseEvent.isPrimaryButtonDown()) return;
-    spawnVertex(mouseEvent.getX(), mouseEvent.getY());
+  protected void onGraphPressed(final MouseEvent __) {
+    return;
   }
   @FXML
   protected void onAddClicked(final MouseEvent __) {
     if (nextVertexPositionCalculator == null) buildNextNodePositionCalculator();
-    final var actualPosition = nextVertexPositionCalculator.getActualPosition();
+    if (nextVertexPositionCalculator.isLimitReached()) {
+      // TODO: Limit Reached
+    } else {
+      final var actualPosition = nextVertexPositionCalculator.getActualPosition();
 
-    final var lastVertex = vertices.getLast();
-    final var vertex = spawnVertex(actualPosition[0], actualPosition[1]);
-    if (lastVertex != null) linkVertexes(lastVertex, vertex);
+      final var newVertexValue = addValueSpinner.getValue();
+      final var lastVertex = vertices.getLast();
+      final var newVertex = spawnVertex(newVertexValue, actualPosition[0], actualPosition[1]);
+      if (lastVertex != null) linkVertexes(lastVertex, newVertex);
 
-    nextVertexPositionCalculator.goAhead();
+      nextVertexPositionCalculator.goAhead();
+    }
   }
   @FXML
   protected void onSearchButtonClicked(final MouseEvent __) {
@@ -73,8 +79,15 @@ public class Controller {
   protected void onRemoveButtonClicked(MouseEvent __) {
     final var valueToSearch = removeValueSpinner.getValue();
     searchVertexValue(valueToSearch, vertex -> {
-      Platform.runLater(() -> this.removeVertex(vertex));
-      if (vertices.getLast().equals(vertex)) nextVertexPositionCalculator.goBack();
+      final var prev = vertex.getPrev();
+      final var next = vertex.getNext();
+      Platform.runLater(() -> {
+        if (prev != null && next != null) linkVertexes(prev, next);
+        if (next != null && prev == null) next.setPrev(null);
+        if (prev != null && next == null) prev.setNext(null);
+        if (vertices.getLast() == vertex) nextVertexPositionCalculator.goBack();
+        this.removeVertex(vertex);
+      });
     });
   }
   @FXML
@@ -104,8 +117,13 @@ public class Controller {
       }
     });
   }
-  protected Vertex spawnVertex(final double x, final double y) {
-    final Vertex vertex = new Vertex(x, y);
+  protected Vertex spawnVertex(final Integer value, final double x, final double y) {
+    final Vertex prev = vertices.getLast();
+    final Vertex vertex = new Vertex(value, x, y);
+    if (prev != null) {
+      prev.setNext(vertex);
+      vertex.setPrev(prev);
+    }
     vertices.add(vertex);
 
     final var vertexBehaviorManager = vertex.getVertexBehaviourManager();

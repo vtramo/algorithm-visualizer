@@ -1,19 +1,23 @@
 package org.openjfx.ui;
 
 import javafx.util.Pair;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.LinkedList;
 
-public class NextVertexPositionCalculator {
+class NextVertexPositionCalculator {
   private final double xInitialPosition, yInitialPosition;
   private double xPositionIncrementFactor, yPositionIncrementFactor;
   private final double maxX, maxY, minX, minY;
+  @Getter(AccessLevel.PROTECTED)
+  private boolean limitReached;
   private final LinkedList<Pair<Double, Double>> historyPositions = new LinkedList<>();
   private double x, y;
 
   @Builder
-  public NextVertexPositionCalculator(
+  protected NextVertexPositionCalculator(
     double xInitialPosition,
     double yInitialPosition,
     double xPositionIncrementFactor,
@@ -34,30 +38,32 @@ public class NextVertexPositionCalculator {
     historyPositions.add(new Pair<>(xInitialPosition, yInitialPosition));
   }
 
-  public double[] goAhead() {
+  protected double[] goAhead() {
     final var nextX = x + xPositionIncrementFactor;
-    if (nextX > maxX) {
-      xPositionIncrementFactor = -xPositionIncrementFactor;
-      y += yPositionIncrementFactor;
-    } else if (nextX < minX) {
-      xPositionIncrementFactor = -xPositionIncrementFactor;
-      y += yPositionIncrementFactor;
-    } else {
+    final var nextY = y + yPositionIncrementFactor;
+    if (nextX <= maxX && nextX >= minX) {
       x += xPositionIncrementFactor;
+    } else if (nextY > maxY) {
+      limitReached = true;
+      return null;
+    } else {
+      y += yPositionIncrementFactor;
+      xPositionIncrementFactor = -xPositionIncrementFactor;
     }
     historyPositions.add(new Pair<>(x, y));
     return getActualPosition();
   }
-  public double[] goBack() {
+  protected double[] goBack() {
     final var totalPositions = historyPositions.size();
     if (totalPositions - 1 <= 0) throw new IllegalStateException();
     final var lastPosition = historyPositions.get(totalPositions - 2);
     x = lastPosition.getKey();
     y = lastPosition.getValue();
     historyPositions.removeLast();
+    limitReached = false;
     return getActualPosition();
   }
-  public double[] getActualPosition() {
+  protected double[] getActualPosition() {
     return new double[] { x, y };
   }
 }

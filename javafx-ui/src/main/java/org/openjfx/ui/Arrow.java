@@ -41,6 +41,7 @@ class Arrow extends Group {
   }
   protected void bindVertices(final Vertex vertex1, final Vertex vertex2) {
     vertex1.addEdge(this); vertex2.addEdge(this);
+    vertex1.setNext(vertex2); vertex2.setPrev(vertex1);
     x1.bind(vertex1.layoutXProperty());
     y1.bind(vertex1.layoutYProperty());
     x2.bind(vertex2.layoutXProperty());
