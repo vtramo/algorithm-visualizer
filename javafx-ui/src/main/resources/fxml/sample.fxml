@@ -5,22 +5,29 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
 <BorderPane fx:id="borderPane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.Controller">
-    <left>
-        <VBox>
+    <top>
+        <HBox>
    
-            <Button onMouseClicked="#onAddClicked" text="Add" textFill="#795252" />
-            <Spinner fx:id="addValueSpinner" layoutX="10.0" layoutY="58.0" />
-            <Button onMouseClicked="#onSearchButtonClicked" text="Search" />
-            <Spinner fx:id="searchValueSpinner" />
+            <Button onMouseClicked="#onAddClicked" text="Add" textFill="#795252"/>
+            <Spinner fx:id="addValueSpinner" layoutX="10.0" layoutY="58.0"/>
+            <Button onMouseClicked="#onSearchButtonClicked" text="Search"/>
+            <Spinner fx:id="searchValueSpinner"/>
             <Button onMouseClicked="#onRemoveButtonClicked" text="Remove" />
             <Spinner fx:id="removeValueSpinner" />
 
-            <Slider fx:id="algorithmDisplaySpeedSlider" majorTickUnit="10" minorTickCount="10" onMouseDragged="#onAlgorithmDisplaySpeedSliderValueChanged" showTickLabels="true">
+            <Slider fx:id="algorithmDisplaySpeedSlider"
+                    min="100"
+                    max="1000"
+                    value="550"
+                    majorTickUnit="10"
+                    minorTickCount="10"
+                    onMouseDragged="#onAlgorithmDisplaySpeedSliderValueChanged">
             <padding>
                <Insets left="10.0" right="10.0" />
             </padding></Slider>
-        </VBox>
-    </left>
+        </HBox>
+    </top>
 </BorderPane>

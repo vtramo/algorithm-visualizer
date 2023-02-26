@@ -1,28 +1,34 @@
 package org.openjfx.model;
 
 import java.util.LinkedList;
-import java.util.function.Consumer;
+import java.util.List;
 
-public class LinkedListDataStructure<T> extends LinkedList<T> implements DataStructure<T> {
-  private Consumer<T> searchStepAction;
-  @Override
-  public void setSearchStepAction(final Consumer<T> searchStepAction) {
-    this.searchStepAction = searchStepAction;
-  }
+public class LinkedListDataStructure<T> extends ObservableStepDataStructure<T> {
+  private final List<T> list = new LinkedList<>();
+
   @Override
   public boolean search(final T value) {
-    for (final T v: this) {
+    for (final T v: list) {
       if (v == value) return true;
-      searchStepAction.accept(v);
+      stepObservers.forEach(consumer -> consumer.accept(v));
     }
     return false;
   }
+
   @Override
   public boolean insert(final T value) {
-    return add(value);
+    return list.add(value);
   }
+
   @Override
   public boolean remove(final Object value) {
+    for (final T v: list) {
+      if (v == value) {
+        list.remove(v);
+        return true;
+      }
+      stepObservers.forEach(consumer -> consumer.accept(v));
+    }
     return false;
   }
 }
