@@ -23,12 +23,14 @@ public class LinkedListDataStructure<T> extends ObservableStepDataStructure<T> {
   @Override
   public boolean remove(final Object value) {
     for (final T v: list) {
-      if (v == value) {
-        list.remove(v);
-        return true;
-      }
+      if (v == value) return list.remove(v);
       stepObservers.forEach(consumer -> consumer.accept(v));
     }
     return false;
+  }
+
+  @Override
+  public int size() {
+    return list.size();
   }
 }

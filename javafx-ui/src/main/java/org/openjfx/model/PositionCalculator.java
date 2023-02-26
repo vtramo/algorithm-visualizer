@@ -1,11 +1,11 @@
 package org.openjfx.model;
 
-import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 public class PositionCalculator {
   private final double xInitialPosition, yInitialPosition;
@@ -13,8 +13,8 @@ public class PositionCalculator {
   private final double maxX, maxY, minX, minY;
   @Getter(AccessLevel.PROTECTED)
   private boolean limitReached;
-  private final LinkedList<Pair<Double, Double>> historyPositions = new LinkedList<>();
   private double x, y;
+  private LinkedList<Position> historyPositions = new LinkedList<>();
 
   @Builder
   public PositionCalculator(
@@ -35,40 +35,52 @@ public class PositionCalculator {
     this.maxY = maxY;
     this.minX = minX;
     this.minY = minY;
-    historyPositions.add(new Pair<>(xInitialPosition, yInitialPosition));
+    historyPositions.add(new Position(xInitialPosition, yInitialPosition));
   }
 
-  public Position goAhead() {
+  public Optional<Position> goAhead() {
     final var nextX = x + xPositionIncrementFactor;
     final var nextY = y + yPositionIncrementFactor;
+
     if (nextX <= maxX && nextX >= minX) {
       x += xPositionIncrementFactor;
     } else if (nextY > maxY) {
       limitReached = true;
-      return null;
+      return Optional.empty();
     } else {
       y += yPositionIncrementFactor;
       xPositionIncrementFactor = -xPositionIncrementFactor;
     }
-    historyPositions.add(new Pair<>(x, y));
-    return getActualPosition();
+
+    historyPositions.add(new Position(x, y));
+    return Optional.of(getActualPosition());
   }
-  public Position goBack() {
+
+  public Optional<Position> goBack() {
     final var totalPositions = historyPositions.size();
-    if (totalPositions - 1 <= 0) throw new IllegalStateException();
+    if (totalPositions - 1 <= 0) return Optional.empty();
+
     final var lastPosition = historyPositions.get(totalPositions - 2);
-    x = lastPosition.getKey();
-    y = lastPosition.getValue();
+    x = lastPosition.x();
+    y = lastPosition.y();
+
     historyPositions.removeLast();
     limitReached = false;
-    return getActualPosition();
+
+    return Optional.of(getActualPosition());
   }
+
   public Position getActualPosition() {
     return new Position(x, y);
   }
 
-  public void reset() {
+  public Position reset() {
+    limitReached = false;
+    historyPositions = new LinkedList<>();
     x = xInitialPosition;
     y = yInitialPosition;
+    xPositionIncrementFactor = Math.abs(xPositionIncrementFactor);
+    historyPositions.add(new Position(x, y));
+    return getActualPosition();
   }
 }

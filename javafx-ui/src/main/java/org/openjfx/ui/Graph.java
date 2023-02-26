@@ -10,8 +10,6 @@ import org.openjfx.utils.Sleep;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.openjfx.utils.Constants.*;
-
 public class Graph extends Pane {
   @Setter
   private long delay = 250L;
@@ -33,14 +31,13 @@ public class Graph extends Pane {
     observableDataStructure.addOnValueInsertedListener(this::onValueInserted);
     observableDataStructure.addOnValueRemovedListener(this::onValueRemoved);
 
-    setPrefWidth(SCREEN_WIDTH);
-    setPrefHeight(SCREEN_HEIGHT);
+    setPrefWidth(1280);
+    setPrefHeight(720);
     setStyle("-fx-background-color:lightblue;");
   }
 
   private void onStepDone(final Position position) {
     final var vertex = vertexByPosition.get(position);
-    System.out.println("STEP - Vertex: " + vertex + " Position: " + position);
     vertex.addStyle(Style.VertexStyle.RED_TRANSPARENT_VERTEX);
     Sleep.sleep(delay);
     vertex.removeStyle(Style.VertexStyle.RED_TRANSPARENT_VERTEX);
@@ -48,7 +45,6 @@ public class Graph extends Pane {
 
   private void onValueFound(final Position position) {
     final var vertex = vertexByPosition.get(position);
-    System.out.println("VALUE FOUND - Vertex: " + vertex + " Position: " + position);
     vertex.addStyle(Style.VertexStyle.GREEN_VERTEX);
     Sleep.sleep(delay);
     vertex.removeStyle(Style.VertexStyle.GREEN_VERTEX);
@@ -56,22 +52,16 @@ public class Graph extends Pane {
 
   private void onValueInserted(final Integer value, final Position position) {
     final var vertex = addVertex(value, position);
-    System.out.println("VALUE INSERTED - Vertex: " + vertex + " Position: " + position);
     if (lastVertex != null && !lastVertex.equals(vertex)) linkVertexes(lastVertex, vertex);
     lastVertex = vertex;
   }
 
   private void onValueRemoved(final Position position) {
     final var vertex = vertexByPosition.get(position);
-    System.out.println("VALUE REMOVED - Vertex: " + vertex + " Position: " + position);
+    vertex.addStyle(Style.VertexStyle.GREEN_VERTEX);
+    Sleep.sleep(delay);
+    vertex.removeStyle(Style.VertexStyle.GREEN_VERTEX);
     removeVertex(vertex);
-  }
-
-  private Vertex addVertex(final Integer value, final Position position) {
-    final var vertex = new Vertex(value, position);
-    vertexByPosition.put(position, vertex);
-    getChildren().add(vertex);
-    return vertex;
   }
 
   private void removeVertex(final Vertex vertex) {
@@ -103,12 +93,18 @@ public class Graph extends Pane {
     vertex.setPrev(null);
   }
 
+  private Vertex addVertex(final Integer value, final Position position) {
+    final var vertex = new Vertex(value, position);
+    vertexByPosition.put(position, vertex);
+    getChildren().add(vertex);
+    return vertex;
+  }
+
   private void rollback(final Vertex vertex, Position backPosition) {
-    System.out.println("ROLLBACK - Vertex: " + vertex + " Back Position: " + backPosition);
     var curr = vertex;
     while (curr != null) {
       final var tmpPosition = curr.getPosition();
-      curr.setVertexPosition(backPosition);
+      curr.setVertexPositionTimelineAnimation(backPosition, delay);
       vertexByPosition.remove(tmpPosition);
       vertexByPosition.put(backPosition, curr);
       backPosition = tmpPosition;
@@ -116,17 +112,15 @@ public class Graph extends Pane {
     }
   }
 
+  private void removeEdge(final Vertex vertex1, final Vertex vertex2) {
+    final var edgeToRemove = edges.remove(new VertexCouple(vertex1, vertex2));
+    Platform.runLater(() -> getChildren().remove(edgeToRemove));
+  }
+
   private Edge linkVertexes(final Vertex vertex1, final Vertex vertex2) {
     final var edge = new Edge(vertex1, vertex2);
-    System.out.println("EDGE INSERTED - Vertex1: " + vertex1 + " Vertex2: " + vertex2);
     edges.put(new VertexCouple(vertex1, vertex2), edge);
     Platform.runLater(() -> getChildren().add(edge));
     return edge;
-  }
-
-  private void removeEdge(final Vertex vertex1, final Vertex vertex2) {
-    final var edgeToRemove = edges.remove(new VertexCouple(vertex1, vertex2));
-    System.out.println("EDGE REMOVED - Vertex1: " + vertex1 + " Vertex2: " + vertex2);
-    Platform.runLater(() -> getChildren().remove(edgeToRemove));
   }
 }
