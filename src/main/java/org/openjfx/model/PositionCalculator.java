@@ -1,6 +1,5 @@
 package org.openjfx.model;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +10,7 @@ public class PositionCalculator {
   private final double xInitialPosition, yInitialPosition;
   private double xPositionIncrementFactor, yPositionIncrementFactor;
   private final double maxX, maxY, minX, minY;
-  @Getter(AccessLevel.PROTECTED)
+  @Getter
   private boolean limitReached;
   private double x, y;
   private LinkedList<Position> historyPositions = new LinkedList<>();
@@ -40,16 +39,19 @@ public class PositionCalculator {
 
   public Optional<Position> goAhead() {
     final var nextX = x + xPositionIncrementFactor;
-    final var nextY = y + yPositionIncrementFactor;
 
-    if (nextX <= maxX && nextX >= minX) {
+    if (nextX < maxX && nextX > minX) {
       x += xPositionIncrementFactor;
-    } else if (nextY > maxY) {
-      limitReached = true;
-      return Optional.empty();
     } else {
       y += yPositionIncrementFactor;
-      xPositionIncrementFactor = -xPositionIncrementFactor;
+      final var nextY = y + yPositionIncrementFactor;
+
+      if (nextY > maxY) {
+        limitReached = true;
+        return Optional.empty();
+      } else {
+        xPositionIncrementFactor = -xPositionIncrementFactor;
+      }
     }
 
     historyPositions.add(new Position(x, y));

@@ -16,6 +16,7 @@ import java.util.function.BiConsumer;
 
 import static org.openjfx.ui.Style.*;
 
+
 public class Vertex extends Button {
   @Setter @Getter private Vertex prev, next;
   @Setter @Getter private Integer value;
