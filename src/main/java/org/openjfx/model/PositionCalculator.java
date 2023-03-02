@@ -36,7 +36,6 @@ public class PositionCalculator {
   }
 
   public Position goAhead() {
-    System.out.println("x: " + x + ", y: " + y);
     if (limitReached) return getActualPosition();
 
     final var nextX = x + xPositionIncrementFactor;
@@ -49,19 +48,17 @@ public class PositionCalculator {
         limitReached = true;
         return getActualPosition();
       } else {
-        System.out.println("OH SHIT");
         y += yPositionIncrementFactor;
         xPositionIncrementFactor = -xPositionIncrementFactor;
       }
     }
 
-    System.out.println("AFTER x: " + x + ", y: " + y);
     historyPositions.add(new Position(x, y));
     return getActualPosition();
   }
 
   public Position goBack() {
-    if (limitReached) {
+    if (limitReached) { // TODO: fix this
       limitReached = false;
       return getActualPosition();
     }

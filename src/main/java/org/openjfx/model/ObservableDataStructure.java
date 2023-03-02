@@ -55,7 +55,6 @@ public class ObservableDataStructure<T> extends ObservableStepDataStructure<T> {
   public boolean search(T value) {
     final boolean found = observableStepDataStructure.search(value);
     final var actualPosition = currentPositionCalculator.getActualPosition();
-    logPosition(actualPosition, "SEARCH: ");
 
     if (found) onValueFoundListeners.forEach(listener -> listener.accept(actualPosition));
 
@@ -67,7 +66,6 @@ public class ObservableDataStructure<T> extends ObservableStepDataStructure<T> {
   public boolean remove(T value) {
     final boolean removed = observableStepDataStructure.remove(value);
     final var actualPosition = currentPositionCalculator.getActualPosition();
-    logPosition(actualPosition, "REMOVE: ");
 
     if (removed) {
       onValueRemovedListeners.forEach(listener -> listener.accept(actualPosition));
@@ -84,7 +82,6 @@ public class ObservableDataStructure<T> extends ObservableStepDataStructure<T> {
     if (lastPositionCalculator.isLimitReached()) return false;
 
     final var lastPosition = lastPositionCalculator.getActualPosition();
-    logPosition(lastPosition, "INSERT: ");
     final boolean inserted = observableStepDataStructure.insert(value);
 
     if (inserted) onValueInsertedListeners.forEach(listener -> listener.accept(value, lastPosition));
@@ -96,9 +93,5 @@ public class ObservableDataStructure<T> extends ObservableStepDataStructure<T> {
   @Override
   public int size() {
     return observableStepDataStructure.size();
-  }
-
-  private void logPosition(Position pos, String tag) {
-    System.out.println(tag + " " + pos);
   }
 }
