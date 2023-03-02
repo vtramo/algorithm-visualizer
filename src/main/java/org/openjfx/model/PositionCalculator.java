@@ -4,14 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.util.LinkedList;
-import java.util.Optional;
 
 public class PositionCalculator {
-  private final double xInitialPosition, yInitialPosition;
-  private double xPositionIncrementFactor, yPositionIncrementFactor;
-  private final double maxX, maxY, minX, minY;
-  @Getter
-  private boolean limitReached;
+  @Getter private final double xInitialPosition, yInitialPosition;
+  @Getter private double xPositionIncrementFactor, yPositionIncrementFactor;
+  @Getter private final double maxX, maxY, minX, minY;
+  @Getter private boolean limitReached;
   private double x, y;
   private LinkedList<Position> historyPositions = new LinkedList<>();
 
@@ -37,39 +35,49 @@ public class PositionCalculator {
     historyPositions.add(new Position(xInitialPosition, yInitialPosition));
   }
 
-  public Optional<Position> goAhead() {
+  public Position goAhead() {
+    System.out.println("x: " + x + ", y: " + y);
+    if (limitReached) return getActualPosition();
+
     final var nextX = x + xPositionIncrementFactor;
+    final var nextY = y + yPositionIncrementFactor;
 
     if (nextX < maxX && nextX > minX) {
       x += xPositionIncrementFactor;
     } else {
-      y += yPositionIncrementFactor;
-      final var nextY = y + yPositionIncrementFactor;
-
-      if (nextY > maxY) {
+      if (nextY >= maxY) {
         limitReached = true;
-        return Optional.empty();
+        return getActualPosition();
       } else {
+        System.out.println("OH SHIT");
+        y += yPositionIncrementFactor;
         xPositionIncrementFactor = -xPositionIncrementFactor;
       }
     }
 
+    System.out.println("AFTER x: " + x + ", y: " + y);
     historyPositions.add(new Position(x, y));
-    return Optional.of(getActualPosition());
+    return getActualPosition();
   }
 
-  public Optional<Position> goBack() {
-    final var totalPositions = historyPositions.size();
-    if (totalPositions - 1 <= 0) return Optional.empty();
+  public Position goBack() {
+    if (limitReached) {
+      limitReached = false;
+      return getActualPosition();
+    }
 
-    final var lastPosition = historyPositions.get(totalPositions - 2);
+    final var totalPositions = historyPositions.size();
+    if (totalPositions - 1 <= 0) return getActualPosition();
+
+    historyPositions.removeLast();
+
+    final var lastPosition = historyPositions.getLast();
+    if (lastPosition.y() != y) xPositionIncrementFactor = -xPositionIncrementFactor;
     x = lastPosition.x();
     y = lastPosition.y();
 
-    historyPositions.removeLast();
     limitReached = false;
-
-    return Optional.of(getActualPosition());
+    return getActualPosition();
   }
 
   public Position getActualPosition() {
