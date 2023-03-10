@@ -10,6 +10,7 @@ import org.openjfx.utils.Sleep;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Graph extends Pane {
   @Setter
@@ -101,6 +102,14 @@ public class Graph extends Pane {
     vertexByPositionValue.put(position, vertex);
     getChildren().add(vertex);
     return vertex;
+  }
+
+  private void onVertexPositionChanged(final Position oldPosition, final ObservablePositionValue<Integer> positionValue) {
+    final var vertexToUpdate = Optional.of(vertexByPositionValue.remove(oldPosition));
+    vertexToUpdate.ifPresent(vertex -> {
+      final var newVertexPosition = positionValue.getPosition();
+      vertexByPositionValue.put(newVertexPosition, vertex);
+    });
   }
 
   private void rollback(final Vertex vertex, Position backPosition) {
