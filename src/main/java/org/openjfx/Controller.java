@@ -5,14 +5,14 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import org.openjfx.model.LinkedListDataStructure;
-import org.openjfx.model.ObservableDataStructure;
+import org.openjfx.model.LinkedListPositionValueDataStructure;
+import org.openjfx.model.ObservablePositionValueDataStructure;
 import org.openjfx.ui.Graph;
 import org.openjfx.ui.SpinnerFactory;
 
 public class Controller {
-  private final ObservableDataStructure<Integer> observableDataStructure =
-    new ObservableDataStructure<>(new LinkedListDataStructure<>());
+  private final ObservablePositionValueDataStructure<Integer> observableDataStructure =
+    new ObservablePositionValueDataStructure<>(new LinkedListPositionValueDataStructure<>());
 
   private Graph graph;
   @FXML private BorderPane borderPane;

@@ -3,8 +3,9 @@ package org.openjfx.ui;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import lombok.Setter;
-import org.openjfx.model.ObservableDataStructure;
+import org.openjfx.model.ObservablePositionValueDataStructure;
 import org.openjfx.model.Position;
+import org.openjfx.model.ObservablePositionValue;
 import org.openjfx.utils.Sleep;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 public class Graph extends Pane {
   @Setter
   private long delay = 250L;
-  private final Map<Position, Vertex> vertexByPosition = new HashMap<>();
+  private final Map<Position, Vertex> vertexByPositionValue = new HashMap<>();
   private final Map<VertexCouple, Edge> edges = new HashMap<>();
   private Vertex lastVertex;
 
@@ -25,7 +26,7 @@ public class Graph extends Pane {
     }
   }
 
-  public Graph(final ObservableDataStructure<Integer> observableDataStructure) {
+  public Graph(final ObservablePositionValueDataStructure<Integer> observableDataStructure) {
     observableDataStructure.addStepListener(this::onStepDone);
     observableDataStructure.addOnValueFoundListener(this::onValueFound);
     observableDataStructure.addOnValueInsertedListener(this::onValueInserted);
@@ -36,28 +37,28 @@ public class Graph extends Pane {
     setStyle("-fx-background-color:lightblue;");
   }
 
-  private void onStepDone(final Position position) {
-    final var vertex = vertexByPosition.get(position);
+  private void onStepDone(final ObservablePositionValue<Integer> positionValue) {
+    final var vertex = vertexByPositionValue.get(positionValue.getPosition());
     vertex.addStyle(Style.VertexStyle.RED_TRANSPARENT_VERTEX);
     Sleep.sleep(delay);
     vertex.removeStyle(Style.VertexStyle.RED_TRANSPARENT_VERTEX);
   }
 
-  private void onValueFound(final Position position) {
-    final var vertex = vertexByPosition.get(position);
+  private void onValueFound(final ObservablePositionValue<Integer> positionValue) {
+    final var vertex = vertexByPositionValue.get(positionValue.getPosition());
     vertex.addStyle(Style.VertexStyle.GREEN_VERTEX);
     Sleep.sleep(delay);
     vertex.removeStyle(Style.VertexStyle.GREEN_VERTEX);
   }
 
-  private void onValueInserted(final Integer value, final Position position) {
-    final var vertex = addVertex(value, position);
+  private void onValueInserted(ObservablePositionValue<Integer> positionValue) {
+    final var vertex = addVertex(positionValue);
     if (lastVertex != null && !lastVertex.equals(vertex)) linkVertexes(lastVertex, vertex);
     lastVertex = vertex;
   }
 
-  private void onValueRemoved(final Position position) {
-    final var vertex = vertexByPosition.get(position);
+  private void onValueRemoved(final ObservablePositionValue<Integer> positionValue) {
+    final var vertex = vertexByPositionValue.get(positionValue.getPosition());
     vertex.addStyle(Style.VertexStyle.GREEN_VERTEX);
     Sleep.sleep(delay);
     vertex.removeStyle(Style.VertexStyle.GREEN_VERTEX);
@@ -85,7 +86,7 @@ public class Graph extends Pane {
     }
 
     Platform.runLater(() -> getChildren().remove(vertex));
-    vertexByPosition.remove(vertex.getPosition());
+    vertexByPositionValue.remove(vertex.getPosition());
 
     rollback(vertex.getNext(), vertex.getPosition());
 
@@ -93,9 +94,11 @@ public class Graph extends Pane {
     vertex.setPrev(null);
   }
 
-  private Vertex addVertex(final Integer value, final Position position) {
-    final var vertex = new Vertex(value, position);
-    vertexByPosition.put(position, vertex);
+  private Vertex addVertex(final ObservablePositionValue<Integer> positionValue) {
+    positionValue.addOnPositionChangedListener(this::onVertexPositionChanged);
+    final var position = positionValue.getPosition();
+    final var vertex = new Vertex(positionValue.getValue(), position);
+    vertexByPositionValue.put(position, vertex);
     getChildren().add(vertex);
     return vertex;
   }
@@ -105,8 +108,8 @@ public class Graph extends Pane {
     while (curr != null) {
       final var tmpPosition = curr.getPosition();
       curr.setVertexPositionTimelineAnimation(backPosition, delay);
-      vertexByPosition.remove(tmpPosition);
-      vertexByPosition.put(backPosition, curr);
+      vertexByPositionValue.remove(tmpPosition);
+      vertexByPositionValue.put(backPosition, curr);
       backPosition = tmpPosition;
       curr = curr.getNext();
     }
