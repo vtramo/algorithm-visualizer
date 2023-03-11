@@ -14,7 +14,7 @@ public class LinkedListPositionValueDataStructure<T> extends ObservableStepPosit
   public Optional<ObservablePositionValue<T>> search(final T value) {
     for (final ObservablePositionValue<T> positionValue: list) {
       if (positionValue.getValue() == value) return Optional.of(positionValue);
-      stepObservers.forEach(consumer -> consumer.accept(positionValue));
+      notifyStepObservers(positionValue);
     }
     return Optional.empty();
   }
@@ -39,12 +39,15 @@ public class LinkedListPositionValueDataStructure<T> extends ObservableStepPosit
         rollback(positionValue, listIterator);
         return Optional.of(positionValue);
       }
-      stepObservers.forEach(consumer -> consumer.accept(positionValue));
+      notifyStepObservers(positionValue);
     }
     return Optional.empty();
   }
 
-  private void rollback(ObservablePositionValue<T> positionValue, Iterator<ObservablePositionValue<T>> iterator) {
+  private void rollback(
+    final ObservablePositionValue<T> positionValue,
+    final Iterator<ObservablePositionValue<T>> iterator
+  ) {
     var currentPositionValue = positionValue;
     while (iterator.hasNext()) {
       final var nextPositionValue = iterator.next();

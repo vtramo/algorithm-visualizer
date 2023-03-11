@@ -10,4 +10,8 @@ public abstract class ObservableStepPositionValueDataStructure<T> implements Pos
   public void addStepObserver(final Consumer<ObservablePositionValue<T>> stepObserver) {
     stepObservers.add(stepObserver);
   }
+
+  protected void notifyStepObservers(final ObservablePositionValue<T> positionValue) {
+    stepObservers.forEach(consumer -> consumer.accept(positionValue));
+  }
 }
